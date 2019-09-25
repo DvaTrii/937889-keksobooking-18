@@ -82,8 +82,14 @@ var MOCK = {
     ]
   },
   location: {
-    x: getRandomIntInclusive(130, 630),
-    y: getRandomIntInclusive(130, 630)
+    x: {
+      min: 130,
+      max: 630
+    },
+    y: {
+      min: 130,
+      max: 630
+    }
   }
 };
 
@@ -110,8 +116,8 @@ var getAdvertisements = function (amount) {
             photos: getRandomArrayOfArray(MOCK.offer.photos)
           },
           location: {
-            x: getRandomIntInclusive(130, 630),
-            y: getRandomIntInclusive(130, 630)
+            x: getRandomIntInclusive(MOCK.location.x.min, MOCK.location.x.max),
+            y: getRandomIntInclusive(MOCK.location.y.min, MOCK.location.y.max)
           }
         });
   }
