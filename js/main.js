@@ -25,12 +25,12 @@ var getRandomIntInclusive = function (min, max) {
 };
 
 // получаем массив с случайным количеством строк из элементов готового массива
-var getRandomArrayOfArray = function (arrayName) {
-  var RandomArrayOfArray = [];
+var getRandomArray = function (arrayName) {
+  var randomArray = [];
   for (var i = 1; i <= getRandomNumber(arrayName); i++) {
-    RandomArrayOfArray.push(arrayName[getRandomNumber(arrayName)]);
+    randomArray.push(arrayName[getRandomNumber(arrayName)]);
   }
-  return RandomArrayOfArray;
+  return randomArray;
 };
 
 var MOCK = {
@@ -111,9 +111,9 @@ var getAdvertisements = function (amount) {
             guests: getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
             checkin: getRandomNumber(MOCK.offer.checkin),
             checkout: getRandomNumber(MOCK.offer.checkout),
-            features: getRandomArrayOfArray(MOCK.offer.features),
+            features: getRandomArray(MOCK.offer.features),
             description: MOCK.offer.description,
-            photos: getRandomArrayOfArray(MOCK.offer.photos)
+            photos: getRandomArray(MOCK.offer.photos)
           },
           location: {
             x: getRandomIntInclusive(MOCK.location.x.min, MOCK.location.x.max),
