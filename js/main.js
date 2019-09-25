@@ -24,24 +24,6 @@ var getRandomIntInclusive = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min; // Максимум и минимум включаются
 };
 
-// получаем массив с любыми числами по порядку
-var getSerialArray = function (quantity) {
-  var arrayName = [];
-  for (var j = 1; j <= quantity; j++) {
-    arrayName.push(j);
-  }
-  return arrayName;
-};
-
-// получаем массив с любыми числами из диапазона
-var getArrayOfRandom = function (quantity, min, max) {
-  var arrayName = [];
-  for (var j = 1; j <= quantity; j++) {
-    arrayName.push(getRandomIntInclusive(min, max));
-  }
-  return arrayName;
-};
-
 // получаем массив с случайным количеством строк из элементов готового массива
 var getRandomArrayOfArray = function (arrayName) {
   var RandomArrayOfArray = [];
@@ -51,90 +33,59 @@ var getRandomArrayOfArray = function (arrayName) {
   return RandomArrayOfArray;
 };
 
-// получаем массив адресов фото для аватаров
-var getAvatars = function (i) {
-  var AVATARS = [];
-  for (var j = 1; j <= i; ++j) {
-    AVATARS.push('img/avatars/user0' + j + '.png');
+var MOCK = {
+  author: {
+    avatar: [
+      'img/avatars/user01.png',
+      'img/avatars/user02.png',
+      'img/avatars/user03.png',
+      'img/avatars/user04.png',
+      'img/avatars/user05.png',
+      'img/avatars/user06.png',
+      'img/avatars/user07.png',
+      'img/avatars/user08.png'
+    ]
+  },
+  offer: {
+    title: [
+      'the lovely place',
+      'the best location',
+      'the comfortable accommodation',
+      'the pretty house',
+      'the beautiful place',
+      'the fancy location',
+      'the lovely street',
+      'the pretty room'
+    ],
+    address: '600, 350',
+    price: {
+      min: 100,
+      max: 8000
+    },
+    type: ['palace', 'flat', 'house', 'bungalo'],
+    rooms: {
+      min: 1,
+      max: 5
+    },
+    guests: {
+      min: 1,
+      max: 10
+    },
+    checkin: ['12:00', '13:00', '14:00'],
+    checkout: ['12:00', '13:00', '14:00'],
+    features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
+    description: '',
+    photos: [
+      'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+      'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+      'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+    ]
+  },
+  location: {
+    x: getRandomIntInclusive(130, 630),
+    y: getRandomIntInclusive(130, 630)
   }
-  return AVATARS;
 };
-
-// получаем массив адресов для пина
-var getAddress = function (i, min, max) {
-  var ADDRESS = [];
-  for (var j = 1; j <= i; ++j) {
-    ADDRESS.push(getRandomIntInclusive(min, max) + ', ' + getRandomIntInclusive(min, max));
-  }
-  return ADDRESS;
-};
-
-// объявляем массивы mock
-var AVATARS = getAvatars(8);
-
-var TITLE = [
-  'the lovely place',
-  'the best location',
-  'the comfortable accommodation',
-  'the pretty house',
-  'the beautiful place',
-  'the fancy location',
-  'the lovely street',
-  'the pretty room',
-];
-
-var ADDRESS = getAddress(8, 100, 600);
-
-var PRICE = getArrayOfRandom(8, 100, 800);
-
-var TYPE = [
-  'palace',
-  'flat',
-  'house',
-  'bungalo'
-];
-
-// получаем массив с комнатами
-var ROOMS = getSerialArray(4);
-
-// получаем массив с гостями
-var GUESTS = getSerialArray(4);
-
-var HOURS = [
-  '12:00',
-  '13:00',
-  '14:00'
-];
-
-var FEATURES_GIVEN = [
-  'wifi',
-  'dishwasher',
-  'parking',
-  'washer',
-  'elevator',
-  'conditioner'
-];
-
-var FEATURES = getRandomArrayOfArray(FEATURES_GIVEN);
-
-var DESCRIPTION = [
-  'lovely place',
-  'best location',
-  'comfortable accommodation',
-  'pretty house',
-  'beautiful place',
-  'fancy location',
-  'lovely street',
-  'pretty rooms',
-];
-
-var PHOTOS_GIVEN = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-];
-
-var PHOTOS = getRandomArrayOfArray(PHOTOS_GIVEN);
 
 // получает объект с данными из mock
 var getAdvertisements = function (amount) {
@@ -143,20 +94,20 @@ var getAdvertisements = function (amount) {
     advertisements.push(
         {
           author: {
-            avatar: AVATARS[j]
+            avatar: MOCK.author.avatar[j]
           },
           offer: {
-            title: TITLE[getRandomNumber(TITLE)],
-            address: ADDRESS[getRandomNumber(ADDRESS)],
-            price: PRICE[getRandomNumber(PRICE)],
-            type: TYPE[getRandomNumber(TYPE)],
-            rooms: ROOMS[getRandomNumber(ROOMS)],
-            guests: GUESTS[getRandomNumber(GUESTS)],
-            checkin: HOURS[getRandomNumber(HOURS)],
-            checkout: HOURS[getRandomNumber(HOURS)],
-            features: FEATURES,
-            description: DESCRIPTION[getRandomNumber(DESCRIPTION)],
-            photos: PHOTOS
+            title: MOCK.offer.title[j],
+            address: MOCK.offer.address,
+            price: getRandomIntInclusive(MOCK.offer.price.min, MOCK.offer.price.max),
+            type: getRandomNumber(MOCK.offer.type),
+            rooms: getRandomIntInclusive(MOCK.offer.rooms.min, MOCK.offer.rooms.max),
+            guests: getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
+            checkin: getRandomNumber(MOCK.offer.checkin),
+            checkout: getRandomNumber(MOCK.offer.checkout),
+            features: getRandomArrayOfArray(MOCK.offer.features),
+            description: MOCK.offer.description,
+            photos: getRandomArrayOfArray(MOCK.offer.photos)
           },
           location: {
             x: getRandomIntInclusive(130, 630),
