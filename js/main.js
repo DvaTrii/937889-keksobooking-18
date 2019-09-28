@@ -4,12 +4,19 @@
 var userDialog = document.querySelector('.map');
 userDialog.classList.remove('map--faded');
 
-// выберем div (ins) куда будем вставлять список похожих персонажей
+// выберем div (ins) куда будем вставлять список
 var pinButtonElement = document.querySelector('.map__pins');
+// parentElement куда вставим  card
+var mapSection = document.querySelector('.map');
+// выберем div (nextSbling) перед чем будем вставлять cards
+var filtersElements = document.querySelector('.map__filters-container');
 
 // выберем шаблон тег template и запишем div (tem) с разметкой с переменную
 var pinButtonTemplate = document.querySelector('#pin')
   .content.querySelector('.map__pin');
+// выберем шаблон тег template и запишем div (tem) с разметкой с переменную
+var cardTemplate = document.querySelector('#card')
+  .content.querySelector('.popup');
 
 
 // генерируем случайные номер элемента в массиве
@@ -74,7 +81,7 @@ var MOCK = {
     checkin: ['12:00', '13:00', '14:00'],
     checkout: ['12:00', '13:00', '14:00'],
     features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-    description: '',
+    description: 'decsription',
     photos: [
       'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
       'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
@@ -109,8 +116,8 @@ var getAdvertisements = function (amount) {
             type: getRandomNumber(MOCK.offer.type),
             rooms: getRandomIntInclusive(MOCK.offer.rooms.min, MOCK.offer.rooms.max),
             guests: getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
-            checkin: getRandomNumber(MOCK.offer.checkin),
-            checkout: getRandomNumber(MOCK.offer.checkout),
+            checkin: MOCK.offer.checkin[getRandomNumber(MOCK.offer.checkin)],
+            checkout: MOCK.offer.checkout[getRandomNumber(MOCK.offer.checkout)],
             features: getRandomArray(MOCK.offer.features),
             description: MOCK.offer.description,
             photos: getRandomArray(MOCK.offer.photos)
@@ -134,12 +141,42 @@ var renderPin = function (advertisement) {
   return pinElement;
 };
 
+var renderCard = function (advertisement) {
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = advertisement.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = advertisement.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = advertisement.offer.price + '₽/ночь';
+  if (advertisement.offer.type === '0') {
+    cardElement.querySelector('.popup__type').textContent = 'дворец';
+  } else if (advertisement.offer.type === '1') {
+    cardElement.querySelector('.popup__type').textContent = 'квартира';
+  } else if (advertisement.offer.type === '2') {
+    cardElement.querySelector('.popup__type').textContent = 'бунгало';
+  } else if (advertisement.offer.type === '3') {
+    cardElement.querySelector('.popup__type').textContent = 'дом';
+  }
+  cardElement.querySelector('.popup__text--capacity').textContent = advertisement.offer.rooms + ' комнаты для ' + advertisement.offer.guests + ' гостей.';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + advertisement.offer.checkin + ' выезд после ' + advertisement.offer.checkout;
+  // cardElement.querySelector('.popup__features') = advertisement.offer.features;
+  cardElement.querySelector('.popup__description').textContent = advertisement.offer.description;
+  cardElement.querySelector('.popup__photos').src = advertisement.offer.photos;
+  cardElement.querySelector('.popup__avatar').src = advertisement.author.avatar;
+  return cardElement;
+};
+
 // генерируем объекты
-var fragment = document.createDocumentFragment();
-var pinsData = getAdvertisements(8);
-for (var i = 0; i < pinsData.length; i++) {
-  fragment.appendChild(renderPin(pinsData[i]));
+var data = getAdvertisements(8);
+
+var fragmentPin = document.createDocumentFragment();
+for (var i = 0; i < data.length; i++) {
+  fragmentPin.appendChild(renderPin(data[i]));
+}
+
+var fragmentCard = document.createDocumentFragment();
+for (i = 0; i < data.length; i++) {
+  fragmentCard.appendChild(renderCard(data[i]));
 }
 
 // вставляем в разметку
-pinButtonElement.appendChild(fragment);
+pinButtonElement.appendChild(fragmentPin);
+mapSection.insertBefore(fragmentCard, filtersElements);
