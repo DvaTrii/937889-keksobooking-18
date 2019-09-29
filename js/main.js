@@ -4,12 +4,19 @@
 var userDialog = document.querySelector('.map');
 userDialog.classList.remove('map--faded');
 
-// выберем div (ins) куда будем вставлять список похожих персонажей
+// выберем div (ins) куда будем вставлять список
 var pinButtonElement = document.querySelector('.map__pins');
+// parentElement куда вставим  card
+var mapSection = document.querySelector('.map');
+// выберем div (nextSibling) перед чем будем вставлять cards
+var filtersElements = document.querySelector('.map__filters-container');
 
 // выберем шаблон тег template и запишем div (tem) с разметкой с переменную
 var pinButtonTemplate = document.querySelector('#pin')
   .content.querySelector('.map__pin');
+// выберем шаблон тег template и запишем div (tem) с разметкой с переменную
+var cardTemplate = document.querySelector('#card')
+  .content.querySelector('.popup');
 
 
 // генерируем случайные номер элемента в массиве
@@ -27,8 +34,8 @@ var getRandomIntInclusive = function (min, max) {
 // получаем массив с случайным количеством строк из элементов готового массива
 var getRandomArray = function (arrayName) {
   var randomArray = [];
-  for (var i = 1; i <= getRandomNumber(arrayName); i++) {
-    randomArray.push(arrayName[getRandomNumber(arrayName)]);
+  for (var i = 0; i <= getRandomNumber(arrayName); i++) {
+    randomArray.push(arrayName[i]);
   }
   return randomArray;
 };
@@ -74,7 +81,7 @@ var MOCK = {
     checkin: ['12:00', '13:00', '14:00'],
     checkout: ['12:00', '13:00', '14:00'],
     features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-    description: '',
+    description: 'decsription',
     photos: [
       'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
       'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
@@ -93,6 +100,14 @@ var MOCK = {
   }
 };
 
+// объект для type с полями
+var OfferType = {
+  palace: 'дворец',
+  flat: 'квартира',
+  house: 'дом',
+  bungalo: 'бунгало'
+};
+
 // получает объект с данными из mock
 var getAdvertisements = function (amount) {
   var advertisements = [];
@@ -106,11 +121,11 @@ var getAdvertisements = function (amount) {
             title: MOCK.offer.title[j],
             address: MOCK.offer.address,
             price: getRandomIntInclusive(MOCK.offer.price.min, MOCK.offer.price.max),
-            type: getRandomNumber(MOCK.offer.type),
+            type: MOCK.offer.type[getRandomNumber(MOCK.offer.type)],
             rooms: getRandomIntInclusive(MOCK.offer.rooms.min, MOCK.offer.rooms.max),
             guests: getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
-            checkin: getRandomNumber(MOCK.offer.checkin),
-            checkout: getRandomNumber(MOCK.offer.checkout),
+            checkin: MOCK.offer.checkin[getRandomNumber(MOCK.offer.checkin)],
+            checkout: MOCK.offer.checkout[getRandomNumber(MOCK.offer.checkout)],
             features: getRandomArray(MOCK.offer.features),
             description: MOCK.offer.description,
             photos: getRandomArray(MOCK.offer.photos)
@@ -134,12 +149,48 @@ var renderPin = function (advertisement) {
   return pinElement;
 };
 
+var renderCard = function (advertisement) {
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = advertisement.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = advertisement.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = advertisement.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = OfferType[advertisement.offer.type];
+  cardElement.querySelector('.popup__text--capacity').textContent = advertisement.offer.rooms + ' комнаты для ' + advertisement.offer.guests + ' гостей.';
+  cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + advertisement.offer.checkin + ' выезд после ' + advertisement.offer.checkout;
+  cardElement.querySelector('.popup__features').innerHTML = '';
+  advertisement.offer.features.forEach(function (it) {
+    var featuresElement = document.createElement('li');
+    featuresElement.className = 'popup__feature popup__feature--' + it;
+    cardElement.querySelector('.popup__features').appendChild(featuresElement);
+  });
+  cardElement.querySelector('.popup__description').textContent = advertisement.offer.description;
+  cardElement.querySelector('.popup__photos').innerHTML = '';
+  advertisement.offer.photos.forEach(function (it) {
+    var photosElement = document.createElement('img');
+    photosElement.className = 'popup__photo';
+    photosElement.height = 40;
+    photosElement.width = 45;
+    photosElement.alt = 'Фотография жилья';
+    photosElement.src = it;
+    cardElement.querySelector('.popup__photos').appendChild(photosElement);
+  });
+  cardElement.querySelector('.popup__avatar').src = advertisement.author.avatar;
+  return cardElement;
+};
+
 // генерируем объекты
-var fragment = document.createDocumentFragment();
-var pinsData = getAdvertisements(8);
-for (var i = 0; i < pinsData.length; i++) {
-  fragment.appendChild(renderPin(pinsData[i]));
+var data = getAdvertisements(8);
+
+var fragmentPin = document.createDocumentFragment();
+for (var i = 0; i < data.length; i++) {
+  fragmentPin.appendChild(renderPin(data[i]));
+}
+
+var fragmentCard = document.createDocumentFragment();
+for (i = 0; i < data.length; i++) {
+  fragmentCard.appendChild(renderCard(data[i]));
 }
 
 // вставляем в разметку
-pinButtonElement.appendChild(fragment);
+pinButtonElement.appendChild(fragmentPin);
+mapSection.insertBefore(fragmentCard, filtersElements);
