@@ -1,8 +1,150 @@
 'use strict';
 
+// ============================================= 4 задание обработка событий =============================================
 // сделали карту активной - убрали класс .map--faded
+// в module4-task2 - скроем карту
+// магические кнопки esc enter
+// var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+// начальные координаты указателя пина относительно метки
+var MAIN_PIN_X = 22.5;
+var MAIN_PIN_Y = 65;
+
+// Форма с фильтрами .map__filters заблокирована
+// Форма заполнения информации об объявлении неактивна
 var userDialog = document.querySelector('.map');
-userDialog.classList.remove('map--faded');
+var adForm = document.querySelector('.ad-form');
+var adTitle = adForm.querySelector('#title');
+var adPrice = adForm.querySelector('#price');
+var adType = adForm.querySelector('#type');
+var timeIn = adForm.querySelector('#timein');
+var timeOut = adForm.querySelector('#timeout');
+var roomNumber = adForm.querySelector('#room_number');
+var guestNumber = adForm.querySelector('#capacity');
+var mapFilters = document.querySelector('.map__filters');
+var mainPin = document.querySelector('.map__pin--main');
+var formFieldSets = adForm.querySelectorAll('fieldset');
+
+// размеры mainPin 45x49 + 17 (острый конец курсора) pin(style left: 0 top: 0) address = left: 22.5px top: 50px+15px=65px
+// записываем координаты указателя в поле адрес
+var adAddress = (parseFloat(mainPin.style.left) + MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + MAIN_PIN_Y);
+var inputAddress = document.querySelector('#address');
+
+// бокирует форму
+var disableForm = function () {
+  for (var i = 0; i < formFieldSets.length; i++) {
+    formFieldSets[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+// активирует форму
+var enableForm = function () {
+  for (var i = 0; i < formFieldSets.length; i++) {
+    formFieldSets[i].removeAttribute('disabled');
+  }
+};
+
+// вызовем функцию чтобы заблокировать форму
+disableForm();
+
+// функция активации страницы + происходит рендер пинов и снимает обработчик чтоб повторно не вызвать функцию
+var activatePage = function () {
+  userDialog.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapFilters.classList.remove('map__filters--disabled');
+  inputAddress.value = adAddress;
+  enableForm();
+  getAllData(8);
+  // var data = getAdvertisements(8);
+  // var fragmentPin = document.createDocumentFragment();
+  // for (var i = 0; i < data.length; i++) {
+  //   fragmentPin.appendChild(renderPin(data[i]));
+  // }
+  // pinButtonElement.appendChild(fragmentPin);
+  // mainPin.removeEventListener('mousedown', activatePage);
+};
+
+var onMainPinEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    activatePage();
+  }
+};
+
+mainPin.addEventListener('mousedown', activatePage);
+mainPin.addEventListener('keydown', onMainPinEnterPress);
+
+// ============================================= 4 задание валидация формы =============================================
+// Заголовок объявления должен бть от 30 д 100 символов
+adTitle.addEventListener('invalid', function () {
+  if (adTitle.validity.tooShort) {
+    adTitle.setCustomValidity('Минимальная длина заголовка 30 символов');
+  } else if (adTitle.validity.tooLong) {
+    adTitle.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (adTitle.validity.valueMissing) {
+    adTitle.setCustomValidity('Это обязательное поле');
+  } else {
+    adTitle.setCustomValidity(''); // сбросить значение поля, если это значение стало корректно
+  }
+});
+
+// тип жилья влияет на минимальную цену
+var typeMinPrice = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+adType.addEventListener('change', function () {
+  adPrice.min = typeMinPrice[adType.value];
+  adPrice.placeholder = typeMinPrice[adType.value];
+});
+
+// цена
+adPrice.addEventListener('invalid', function () {
+  if (adPrice.validity.rangeOverflow) {
+    adPrice.setCustomValidity('Стоимость не может быть выше 1000000');
+  } else if (adPrice.validity.rangeUnderflow) {
+    adPrice.setCustomValidity('Стоимость не может быть ниже ' + adPrice.min);
+  } else {
+    adPrice.setCustomValidity(''); // сбросить значение поля, если это значение стало корректно
+  }
+});
+
+// время заезда и выезда
+timeIn.addEventListener('change', function () {
+  timeOut.value = timeIn.value;
+});
+
+timeOut.addEventListener('change', function () {
+  timeIn.value = timeOut.value;
+});
+
+// количество комнат синхрон с количесвом гостей
+var guestsValues = {
+  1: [2],
+  2: [1, 2],
+  3: [0, 1, 2],
+  100: [3]
+};
+
+var setGuests = function (roomsAmount) {
+  var guests = guestNumber.options;
+  for (var j = 0; j < guests.length; j++) {
+    guests[j].setAttribute('disabled', 'disabled');
+    guests[j].removeAttribute('selected');
+  }
+  guestsValues[roomsAmount.value].forEach(function (it) {
+    guests[it].removeAttribute('disabled');
+  });
+};
+
+roomNumber.addEventListener('change', function () {
+  setGuests(roomNumber);
+});
+
+// ============================================= 4 задание end =============================================
 
 // выберем div (ins) куда будем вставлять список
 var pinButtonElement = document.querySelector('.map__pins');
@@ -91,11 +233,11 @@ var MOCK = {
   location: {
     x: {
       min: 130,
-      max: 630
+      max: 1200
     },
     y: {
       min: 130,
-      max: 630
+      max: 600
     }
   }
 };
@@ -178,19 +320,22 @@ var renderCard = function (advertisement) {
   return cardElement;
 };
 
-// генерируем объекты
-var data = getAdvertisements(8);
+// генерируем объекты и уберем их чтобы не мешали выполнять 4 задание 0 обьектов чтобы не сыпались ошибки
+// добавим генерацию в фуенкцию активации страницы
+var getAllData = function (amount) {
+  var data = getAdvertisements(amount);
 
-var fragmentPin = document.createDocumentFragment();
-for (var i = 0; i < data.length; i++) {
-  fragmentPin.appendChild(renderPin(data[i]));
-}
+  var fragmentPin = document.createDocumentFragment();
+  for (var i = 0; i < data.length; i++) {
+    fragmentPin.appendChild(renderPin(data[i]));
+  }
 
-var fragmentCard = document.createDocumentFragment();
-for (i = 0; i < data.length; i++) {
-  fragmentCard.appendChild(renderCard(data[i]));
-}
+  var fragmentCard = document.createDocumentFragment();
+  for (i = 0; i < data.length; i++) {
+    fragmentCard.appendChild(renderCard(data[i]));
+  }
+  //  вставляем карточки объектов
+  pinButtonElement.appendChild(fragmentPin);
+  mapSection.insertBefore(fragmentCard, filtersElements);
+};
 
-// вставляем в разметку
-pinButtonElement.appendChild(fragmentPin);
-mapSection.insertBefore(fragmentCard, filtersElements);
