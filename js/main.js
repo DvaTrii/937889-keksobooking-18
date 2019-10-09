@@ -48,13 +48,20 @@ var enableForm = function () {
 // вызовем функцию чтобы заблокировать форму
 disableForm();
 
-// функция активации страницы
+// функция активации страницы + происходит рендер пинов и снимает обработчик чтоб повторно не вызвать функцию
 var activatePage = function () {
   userDialog.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
   mapFilters.classList.remove('map__filters--disabled');
   inputAddress.value = adAddress;
   enableForm();
+  var data = getAdvertisements(8);
+  var fragmentPin = document.createDocumentFragment();
+  for (var i = 0; i < data.length; i++) {
+    fragmentPin.appendChild(renderPin(data[i]));
+  }
+  pinButtonElement.appendChild(fragmentPin);
+  mainPin.removeEventListener('mousedown', activatePage);
 };
 
 var onMainPinEnterPress = function (evt) {
@@ -67,7 +74,7 @@ mainPin.addEventListener('mousedown', activatePage);
 mainPin.addEventListener('keydown', onMainPinEnterPress);
 
 // ============================================= 4 задание валидация формы =============================================
-// Заголовок объявления
+// Заголовок объявления должен бть от 30 д 100 символов
 adTitle.addEventListener('invalid', function () {
   if (adTitle.validity.tooShort) {
     adTitle.setCustomValidity('Минимальная длина заголовка 30 символов');
@@ -81,24 +88,16 @@ adTitle.addEventListener('invalid', function () {
 });
 
 // тип жилья влияет на минимальную цену
-var setMinPrice = function (type) {
-  if (type === 'bungalo') {
-    adPrice.setAttribute('min', '0');
-    adPrice.placeholder = 0;
-  } else if (type === 'flat') {
-    adPrice.setAttribute('min', '1000');
-    adPrice.placeholder = 1000;
-  } else if (type === 'house') {
-    adPrice.setAttribute('min', '5000');
-    adPrice.placeholder = 5000;
-  } else if (type === 'palace') {
-    adPrice.setAttribute('min', '10000');
-    adPrice.placeholder = 10000;
-  }
+var typeMinPrice = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
 };
 
 adType.addEventListener('change', function () {
-  setMinPrice(adType.value);
+  adPrice.min = typeMinPrice[adType.value];
+  adPrice.placeholder = typeMinPrice[adType.value];
 });
 
 // цена
@@ -122,27 +121,22 @@ timeOut.addEventListener('change', function () {
 });
 
 // количество комнат синхрон с количесвом гостей
+var guestsValues = {
+  1: [2],
+  2: [1, 2],
+  3: [0, 1, 2],
+  100: [3]
+};
+
 var setGuests = function (roomsAmount) {
   var guests = guestNumber.options;
   for (var j = 0; j < guests.length; j++) {
     guests[j].setAttribute('disabled', 'disabled');
+    guests[j].removeAttribute('selected');
   }
-  if (roomsAmount.options[0].selected) {
-    guests[2].removeAttribute('disabled');
-    guests[2].setAttribute('selected', 'selected');
-  } else if (roomsAmount.options[1].selected) {
-    guests[2].removeAttribute('disabled');
-    guests[1].removeAttribute('disabled');
-    guests[1].setAttribute('selected', 'selected');
-  } else if (roomsAmount.options[2].selected) {
-    guests[2].removeAttribute('disabled');
-    guests[1].removeAttribute('disabled');
-    guests[0].removeAttribute('disabled');
-    guests[0].setAttribute('selected', 'selected');
-  } else if (roomsAmount.options[3].selected) {
-    guests[3].removeAttribute('disabled');
-    guests[3].setAttribute('selected', 'selected');
-  }
+  guestsValues[roomsAmount.value].forEach(function (it) {
+    guests[it].removeAttribute('disabled');
+  });
 };
 
 roomNumber.addEventListener('change', function () {
@@ -238,11 +232,11 @@ var MOCK = {
   location: {
     x: {
       min: 130,
-      max: 630
+      max: 1200
     },
     y: {
       min: 130,
-      max: 630
+      max: 600
     }
   }
 };
@@ -326,6 +320,7 @@ var renderCard = function (advertisement) {
 };
 
 // генерируем объекты и уберем их чтобы не мешали выполнять 4 задание 0 обьектов чтобы не сыпались ошибки
+// добавим генерацию в фуенкцию активации страницы
 var data = getAdvertisements(0);
 
 var fragmentPin = document.createDocumentFragment();
