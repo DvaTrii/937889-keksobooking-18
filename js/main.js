@@ -55,13 +55,14 @@ var activatePage = function () {
   mapFilters.classList.remove('map__filters--disabled');
   inputAddress.value = adAddress;
   enableForm();
-  var data = getAdvertisements(8);
-  var fragmentPin = document.createDocumentFragment();
-  for (var i = 0; i < data.length; i++) {
-    fragmentPin.appendChild(renderPin(data[i]));
-  }
-  pinButtonElement.appendChild(fragmentPin);
-  mainPin.removeEventListener('mousedown', activatePage);
+  getAllData(8);
+  // var data = getAdvertisements(8);
+  // var fragmentPin = document.createDocumentFragment();
+  // for (var i = 0; i < data.length; i++) {
+  //   fragmentPin.appendChild(renderPin(data[i]));
+  // }
+  // pinButtonElement.appendChild(fragmentPin);
+  // mainPin.removeEventListener('mousedown', activatePage);
 };
 
 var onMainPinEnterPress = function (evt) {
@@ -321,18 +322,20 @@ var renderCard = function (advertisement) {
 
 // генерируем объекты и уберем их чтобы не мешали выполнять 4 задание 0 обьектов чтобы не сыпались ошибки
 // добавим генерацию в фуенкцию активации страницы
-var data = getAdvertisements(0);
+var getAllData = function (amount) {
+  var data = getAdvertisements(amount);
 
-var fragmentPin = document.createDocumentFragment();
-for (var i = 0; i < data.length; i++) {
-  fragmentPin.appendChild(renderPin(data[i]));
-}
+  var fragmentPin = document.createDocumentFragment();
+  for (var i = 0; i < data.length; i++) {
+    fragmentPin.appendChild(renderPin(data[i]));
+  }
 
-var fragmentCard = document.createDocumentFragment();
-for (i = 0; i < data.length; i++) {
-  fragmentCard.appendChild(renderCard(data[i]));
-}
+  var fragmentCard = document.createDocumentFragment();
+  for (i = 0; i < data.length; i++) {
+    fragmentCard.appendChild(renderCard(data[i]));
+  }
+  //  вставляем карточки объектов
+  pinButtonElement.appendChild(fragmentPin);
+  mapSection.insertBefore(fragmentCard, filtersElements);
+};
 
-// вставляем в разметку карточки объекта
-pinButtonElement.appendChild(fragmentPin);
-mapSection.insertBefore(fragmentCard, filtersElements);
