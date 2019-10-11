@@ -25,7 +25,7 @@ var guestNumber = adForm.querySelector('#capacity');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var formFieldSets = adForm.querySelectorAll('fieldset');
-
+// var popupClose = document.querySelector('.popup__close');
 // размеры mainPin 45x49 + 17 (острый конец курсора) pin(style left: 0 top: 0) address = left: 22.5px top: 50px+15px=65px
 // записываем координаты указателя в поле адрес
 var adAddress = (parseFloat(mainPin.style.left) + MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + MAIN_PIN_Y);
@@ -55,14 +55,9 @@ var activatePage = function () {
   mapFilters.classList.remove('map__filters--disabled');
   inputAddress.value = adAddress;
   enableForm();
-  getAllData(8);
-  // var data = getAdvertisements(8);
-  // var fragmentPin = document.createDocumentFragment();
-  // for (var i = 0; i < data.length; i++) {
-  //   fragmentPin.appendChild(renderPin(data[i]));
-  // }
-  // pinButtonElement.appendChild(fragmentPin);
-  // mainPin.removeEventListener('mousedown', activatePage);
+  getAllPins(8);
+  mainPin.removeEventListener('mousedown', activatePage);
+  mainPin.removeEventListener('keydown', onMainPinEnterPress);
 };
 
 var onMainPinEnterPress = function (evt) {
@@ -143,7 +138,10 @@ var setGuests = function (roomsAmount) {
 roomNumber.addEventListener('change', function () {
   setGuests(roomNumber);
 });
-
+// ============================================= 4 задание обработка событий на пине и карточке пина =============================================
+// сначала надо выбрать этот пин
+// повесить на него обработчик по клику или ентер
+// и потом генрировать карту исходя из анных этого пина
 // ============================================= 4 задание end =============================================
 
 // выберем div (ins) куда будем вставлять список
@@ -322,20 +320,27 @@ var renderCard = function (advertisement) {
 
 // генерируем объекты и уберем их чтобы не мешали выполнять 4 задание 0 обьектов чтобы не сыпались ошибки
 // добавим генерацию в фуенкцию активации страницы
-var getAllData = function (amount) {
+var getAllPins = function (amount) {
   var data = getAdvertisements(amount);
 
   var fragmentPin = document.createDocumentFragment();
   for (var i = 0; i < data.length; i++) {
     fragmentPin.appendChild(renderPin(data[i]));
   }
-
-  var fragmentCard = document.createDocumentFragment();
-  for (i = 0; i < data.length; i++) {
-    fragmentCard.appendChild(renderCard(data[i]));
-  }
+  // var fragmentCard = document.createDocumentFragment();
+  // for (i = 0; i < data.length; i++) {
+  //   fragmentCard.appendChild(renderCard(data[i]));
+  // }
   //  вставляем карточки объектов
   pinButtonElement.appendChild(fragmentPin);
-  mapSection.insertBefore(fragmentCard, filtersElements);
+  pinButtonElement.addEventListener('click', function (evt) {
+    getCard(evt.target);
+  });
+  // mapSection.insertBefore(fragmentCard, filtersElements);
 };
 
+var getCard = function (data) {
+  var fragmentCard = document.createDocumentFragment();
+  fragmentCard.appendChild(renderCard(data));
+  mapSection.insertBefore(fragmentCard, filtersElements);
+};
