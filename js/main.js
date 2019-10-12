@@ -3,10 +3,6 @@
 // ============================================= 4 задание обработка событий =============================================
 // сделали карту активной - убрали класс .map--faded
 // в module4-task2 - скроем карту
-// магические кнопки esc enter
-// var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
-
 // начальные координаты указателя пина относительно метки
 var MAIN_PIN_X = 22.5;
 var MAIN_PIN_Y = 65;
@@ -25,7 +21,6 @@ var guestNumber = adForm.querySelector('#capacity');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var formFieldSets = adForm.querySelectorAll('fieldset');
-// var popupClose = document.querySelector('.popup__close');
 // размеры mainPin 45x49 + 17 (острый конец курсора) pin(style left: 0 top: 0) address = left: 22.5px top: 50px+15px=65px
 // записываем координаты указателя в поле адрес
 var adAddress = (parseFloat(mainPin.style.left) + MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + MAIN_PIN_Y);
@@ -56,18 +51,10 @@ var activatePage = function () {
   inputAddress.value = adAddress;
   enableForm();
   getAllPins(8);
-  mainPin.removeEventListener('mousedown', activatePage);
-  mainPin.removeEventListener('keydown', onMainPinEnterPress);
+  mainPin.removeEventListener('click', activatePage);
 };
 
-var onMainPinEnterPress = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    activatePage();
-  }
-};
-
-mainPin.addEventListener('mousedown', activatePage);
-mainPin.addEventListener('keydown', onMainPinEnterPress);
+mainPin.addEventListener('click', activatePage);
 
 // ============================================= 4 задание валидация формы =============================================
 // Заголовок объявления должен бть от 30 д 100 символов
@@ -145,11 +132,11 @@ roomNumber.addEventListener('change', function () {
 // ============================================= 4 задание end =============================================
 
 // выберем div (ins) куда будем вставлять список
-var pinButtonElement = document.querySelector('.map__pins');
+var pinSection = document.querySelector('.map__pins');
 // parentElement куда вставим  card
 var mapSection = document.querySelector('.map');
 // выберем div (nextSibling) перед чем будем вставлять cards
-var filtersElements = document.querySelector('.map__filters-container');
+var filtersSection = document.querySelector('.map__filters-container');
 
 // выберем шаблон тег template и запишем div (tem) с разметкой с переменную
 var pinButtonTemplate = document.querySelector('#pin')
@@ -279,17 +266,28 @@ var getAdvertisements = function (amount) {
   return advertisements;
 };
 
+var onClickPin = function (advertisement) {
+  var card = document.querySelector('.map__card');
+  if (card) {
+    card.remove();
+  }
+  mapSection.insertBefore(createCard(advertisement), filtersSection);
+};
+
 // меняет значения атрибутов на данные из mock
-var renderPin = function (advertisement) {
+var createPin = function (advertisement) {
   var pinElement = pinButtonTemplate.cloneNode(true);
   pinElement.querySelector('img').src = advertisement.author.avatar;
   pinElement.style.left = advertisement.location.x + 'px';
   pinElement.style.top = advertisement.location.y + 'px';
   pinElement.querySelector('img').alt = advertisement.offer.title;
+  pinElement.addEventListener('click', function () {
+    onClickPin(advertisement);
+  });
   return pinElement;
 };
 
-var renderCard = function (advertisement) {
+var createCard = function (advertisement) {
   var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = advertisement.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = advertisement.offer.address;
@@ -315,32 +313,15 @@ var renderCard = function (advertisement) {
     cardElement.querySelector('.popup__photos').appendChild(photosElement);
   });
   cardElement.querySelector('.popup__avatar').src = advertisement.author.avatar;
+  cardElement.querySelector('.popup__close').addEventListener('click', function () {
+    cardElement.remove();
+  });
   return cardElement;
 };
 
-// генерируем объекты и уберем их чтобы не мешали выполнять 4 задание 0 обьектов чтобы не сыпались ошибки
-// добавим генерацию в фуенкцию активации страницы
 var getAllPins = function (amount) {
   var data = getAdvertisements(amount);
-
-  var fragmentPin = document.createDocumentFragment();
-  for (var i = 0; i < data.length; i++) {
-    fragmentPin.appendChild(renderPin(data[i]));
-  }
-  // var fragmentCard = document.createDocumentFragment();
-  // for (i = 0; i < data.length; i++) {
-  //   fragmentCard.appendChild(renderCard(data[i]));
-  // }
-  //  вставляем карточки объектов
-  pinButtonElement.appendChild(fragmentPin);
-  pinButtonElement.addEventListener('click', function (evt) {
-    getCard(evt.target);
+  data.forEach(function (obj) {
+    pinSection.appendChild(createPin(obj));
   });
-  // mapSection.insertBefore(fragmentCard, filtersElements);
-};
-
-var getCard = function (data) {
-  var fragmentCard = document.createDocumentFragment();
-  fragmentCard.appendChild(renderCard(data));
-  mapSection.insertBefore(fragmentCard, filtersElements);
 };
