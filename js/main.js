@@ -31,6 +31,9 @@ var disableForm = function () {
   for (var i = 0; i < formFieldSets.length; i++) {
     formFieldSets[i].setAttribute('disabled', 'disabled');
   }
+  userDialog.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  mapFilters.classList.add('map__filters--disabled');
 };
 
 // активирует форму
@@ -38,6 +41,9 @@ var enableForm = function () {
   for (var i = 0; i < formFieldSets.length; i++) {
     formFieldSets[i].removeAttribute('disabled');
   }
+  userDialog.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapFilters.classList.remove('map__filters--disabled');
 };
 
 // вызовем функцию чтобы заблокировать форму
@@ -45,9 +51,6 @@ disableForm();
 
 // функция активации страницы + происходит рендер пинов и снимает обработчик чтоб повторно не вызвать функцию
 var activatePage = function () {
-  userDialog.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('map__filters--disabled');
   inputAddress.value = adAddress;
   enableForm();
   getAllPins(8);
