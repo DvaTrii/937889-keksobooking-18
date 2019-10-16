@@ -10,14 +10,6 @@
   var mapSection = document.querySelector('.map');
   // выберем div (nextSibling) перед чем будем вставлять cards
   var filtersSection = document.querySelector('.map__filters-container');
-  window.pin = {
-    getAllPins: function (amount) {
-      var data = window.data.getAdvertisements(amount);
-      data.forEach(function (obj) {
-        pinSection.appendChild(createPin(obj));
-      });
-    }
-  };
   var onClickPin = function (advertisement) {
     var card = document.querySelector('.map__card');
     if (card) {
@@ -35,5 +27,13 @@
       onClickPin(advertisement);
     });
     return pinElement;
+  };
+  window.pin = {
+    getAllPins: function (amount) {
+      var data = window.data.getAdvertisements(amount);
+      data.forEach(function (obj) {
+        pinSection.appendChild(createPin(obj));
+      });
+    }
   };
 })();
