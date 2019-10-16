@@ -36,7 +36,7 @@
   var activatePage = function () {
     inputAddress.value = adAddress;
     enableForm();
-    window.utils.getAllPins(8);
+    window.pin.getAllPins(8);
     mainPin.removeEventListener('click', activatePage);
   };
   mainPin.addEventListener('click', activatePage);
