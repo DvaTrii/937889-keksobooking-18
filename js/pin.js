@@ -11,19 +11,19 @@
   // выберем div (nextSibling) перед чем будем вставлять cards
   var filtersSection = document.querySelector('.map__filters-container');
   window.pin = {
-    onClickPin: function (advertisement) {
-      var card = document.querySelector('.map__card');
-      if (card) {
-        card.remove();
-      }
-      mapSection.insertBefore(window.card.createCard(advertisement), filtersSection);
-    },
     getAllPins: function (amount) {
       var data = window.data.getAdvertisements(amount);
       data.forEach(function (obj) {
         pinSection.appendChild(createPin(obj));
       });
     }
+  };
+  var onClickPin = function (advertisement) {
+    var card = document.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+    mapSection.insertBefore(window.card.createCard(advertisement), filtersSection);
   };
   var createPin = function (advertisement) {
     var pinElement = pinButtonTemplate.cloneNode(true);
@@ -32,7 +32,7 @@
     pinElement.style.top = advertisement.location.y + 'px';
     pinElement.querySelector('img').alt = advertisement.offer.title;
     pinElement.addEventListener('click', function () {
-      window.pin.onClickPin(advertisement);
+      onClickPin(advertisement);
     });
     return pinElement;
   };
