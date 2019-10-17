@@ -59,36 +59,35 @@
       }
     }
   };
-
-  window.data = {
-    getAdvertisements: function (amount) {
-      var advertisements = [];
-      for (var j = 0; j < amount; j++) {
-        advertisements.push(
-            {
-              author: {
-                avatar: MOCK.author.avatar[j]
-              },
-              offer: {
-                title: MOCK.offer.title[j],
-                address: MOCK.offer.address,
-                price: window.utils.getRandomIntInclusive(MOCK.offer.price.min, MOCK.offer.price.max),
-                type: MOCK.offer.type[window.utils.getRandomNumber(MOCK.offer.type)],
-                rooms: window.utils.getRandomIntInclusive(MOCK.offer.rooms.min, MOCK.offer.rooms.max),
-                guests: window.utils.getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
-                checkin: MOCK.offer.checkin[window.utils.getRandomNumber(MOCK.offer.checkin)],
-                checkout: MOCK.offer.checkout[window.utils.getRandomNumber(MOCK.offer.checkout)],
-                features: window.utils.getRandomArray(MOCK.offer.features),
-                description: MOCK.offer.description,
-                photos: window.utils.getRandomArray(MOCK.offer.photos)
-              },
-              location: {
-                x: window.utils.getRandomIntInclusive(MOCK.location.x.min, MOCK.location.x.max),
-                y: window.utils.getRandomIntInclusive(MOCK.location.y.min, MOCK.location.y.max)
-              }
-            });
-      }
-      return advertisements;
+  var getAdvertisements = function (amount) {
+    var advertisements = [];
+    for (var j = 0; j < amount; j++) {
+      advertisements.push({
+        author: {
+          avatar: MOCK.author.avatar[j]
+        },
+        offer: {
+          title: MOCK.offer.title[j],
+          address: MOCK.offer.address,
+          price: window.utils.getRandomIntInclusive(MOCK.offer.price.min, MOCK.offer.price.max),
+          type: MOCK.offer.type[window.utils.getRandomNumber(MOCK.offer.type)],
+          rooms: window.utils.getRandomIntInclusive(MOCK.offer.rooms.min, MOCK.offer.rooms.max),
+          guests: window.utils.getRandomIntInclusive(MOCK.offer.guests.min, MOCK.offer.guests.max),
+          checkin: MOCK.offer.checkin[window.utils.getRandomNumber(MOCK.offer.checkin)],
+          checkout: MOCK.offer.checkout[window.utils.getRandomNumber(MOCK.offer.checkout)],
+          features: window.utils.getRandomArray(MOCK.offer.features),
+          description: MOCK.offer.description,
+          photos: window.utils.getRandomArray(MOCK.offer.photos)
+        },
+        location: {
+          x: window.utils.getRandomIntInclusive(MOCK.location.x.min, MOCK.location.x.max),
+          y: window.utils.getRandomIntInclusive(MOCK.location.y.min, MOCK.location.y.max)
+        }
+      });
     }
+    return advertisements;
+  };
+  window.data = {
+    getAdvertisements: getAdvertisements
   };
 })();
