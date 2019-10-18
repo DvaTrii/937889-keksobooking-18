@@ -5,7 +5,6 @@
   var adForm = document.querySelector('.ad-form');
   var formFieldSets = adForm.querySelectorAll('fieldset');
   var mainPin = document.querySelector('.map__pin--main');
-  var adAddress = (parseFloat(mainPin.style.left) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + window.utils.MAIN_PIN_Y);
   var inputAddress = document.querySelector('#address');
   var disableMap = function () {
     for (var i = 0; i < formFieldSets.length; i++) {
@@ -23,8 +22,12 @@
     adForm.classList.remove('ad-form--disabled');
     mapFilters.classList.remove('map__filters--disabled');
   };
+  var setAddress = function () {
+    inputAddress.value = (parseFloat(mainPin.style.left) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + window.utils.MAIN_PIN_Y);
+    return inputAddress.value;
+  };
   var activatePage = function () {
-    inputAddress.value = adAddress;
+    setAddress();
     enableMap();
     window.pin.getAllPins(8);
     mainPin.removeEventListener('click', activatePage);
@@ -40,13 +43,12 @@
       x: evt.clientX,
       y: evt.clientY
     };
-
-    var dragged = false;
-
+    var onMouseOutMap = function () {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      dragged = true;
-
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
@@ -59,7 +61,7 @@
 
       mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      inputAddress.value = (parseFloat(mainPin.style.left) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(mainPin.style.top) + window.utils.MAIN_PIN_Y);
+      setAddress();
     };
 
     var onMouseUp = function (upEvt) {
@@ -67,15 +69,9 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-
-      if (dragged) {
-        var onClickPreventDefault = function (dragEvt) {
-          dragEvt.preventDefault();
-          mainPin.removeEventListener('click', onClickPreventDefault);
-        };
-        mainPin.addEventListener('click', onClickPreventDefault);
-      }
+      window.pin.pinSection.removeEventListener('mouseleave', onMouseOutMap);
     };
+    window.pin.pinSection.addEventListener('mouseleave', onMouseOutMap);
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });

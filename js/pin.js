@@ -29,6 +29,7 @@
     });
   };
   window.pin = {
-    getAllPins: getAllPins
+    getAllPins: getAllPins,
+    pinSection: pinSection
   };
 })();
