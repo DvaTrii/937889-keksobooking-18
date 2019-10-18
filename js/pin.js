@@ -6,7 +6,7 @@
   var filtersSection = document.querySelector('.map__filters-container');
   var onClickPin = function (advertisement) {
     var pinCard = document.querySelector('.map__card');
-    if (pinCard) {
+    if (document.querySelector('.map__card')) {
       pinCard.remove();
     }
     window.map.map.insertBefore(window.card.createCard(advertisement), filtersSection);

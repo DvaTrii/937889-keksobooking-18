@@ -13,7 +13,7 @@
     var card = document.querySelector('.popup');
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
       evt.preventDefault();
-      if (card) {
+      if (document.querySelector('.popup')) {
         card.remove();
       }
     }
