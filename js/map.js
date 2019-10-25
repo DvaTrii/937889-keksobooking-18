@@ -30,7 +30,8 @@
   var activatePage = function () {
     setAddress(mainPin.style.left, mainPin.style.top);
     enableMap();
-    window.pin.getAllPins(8);
+    window.backend.load(window.pin.loadHandler, window.pin.errorHandler);
+    // window.pin.getAllPins(8);
     mainPin.removeEventListener('mousedown', activatePage);
   };
   disableMap();
