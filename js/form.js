@@ -84,7 +84,6 @@
       document.removeEventListener('click', closeSuccess);
     };
     var closeSuccess = function () {
-      console.log(success);
       success.remove();
       window.pin.setPage();
       document.removeEventListener('click', closeSuccess);
