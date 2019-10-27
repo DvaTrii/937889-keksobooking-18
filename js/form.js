@@ -19,6 +19,7 @@
   var timeOut = document.querySelector('#timeout');
   var roomNumber = document.querySelector('#room_number');
   var guestNumber = document.querySelector('#capacity');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var setGuests = function (roomsAmount) {
     var guests = guestNumber.options;
     for (var j = 0; j < guests.length; j++) {
@@ -64,5 +65,37 @@
 
   roomNumber.addEventListener('change', function () {
     setGuests(roomNumber);
+  });
+
+  var uploadHandler = function () {
+    window.pin.mainSection.appendChild(successTemplate);
+    window.map.disableMap();
+    window.pin.setPage();
+    var success = document.querySelector('.success');
+    var onSuccessEscPress = function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        evt.preventDefault();
+        if (success) {
+          success.remove();
+          window.pin.setPage();
+        }
+      }
+      document.removeEventListener('keydown', onSuccessEscPress);
+      document.removeEventListener('click', closeSuccess);
+    };
+    var closeSuccess = function () {
+      console.log(success);
+      success.remove();
+      window.pin.setPage();
+      document.removeEventListener('click', closeSuccess);
+      document.removeEventListener('keydown', onSuccessEscPress);
+    };
+    document.addEventListener('click', closeSuccess);
+    document.addEventListener('keydown', onSuccessEscPress);
+  };
+
+  window.map.adForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(window.map.adForm), uploadHandler, window.pin.errorHandler);
+    evt.preventDefault();
   });
 })();
