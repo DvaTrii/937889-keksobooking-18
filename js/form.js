@@ -12,6 +12,8 @@
     3: [0, 1, 2],
     100: [3]
   };
+  var adForm = document.querySelector('.ad-form');
+  var formFieldSets = adForm.querySelectorAll('fieldset');
   var adTitle = document.querySelector('#title');
   var adPrice = document.querySelector('#price');
   var adType = document.querySelector('#type');
@@ -19,6 +21,7 @@
   var timeOut = document.querySelector('#timeout');
   var roomNumber = document.querySelector('#room_number');
   var guestNumber = document.querySelector('#capacity');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var setGuests = function (roomsAmount) {
     var guests = guestNumber.options;
     for (var j = 0; j < guests.length; j++) {
@@ -29,6 +32,19 @@
       guests[it].removeAttribute('disabled');
     });
   };
+  var enableForm = function () {
+    formFieldSets.forEach(function (it) {
+      it.removeAttribute('disabled');
+    });
+    adForm.classList.remove('ad-form--disabled');
+  };
+  var disableForm = function () {
+    formFieldSets.forEach(function (it) {
+      it.setAttribute('disabled', 'disabled');
+    });
+    adForm.classList.add('ad-form--disabled');
+  };
+
   adTitle.addEventListener('invalid', function () {
     if (adTitle.validity.tooShort) {
       adTitle.setCustomValidity('Минимальная длина заголовка 30 символов');
@@ -65,4 +81,40 @@
   roomNumber.addEventListener('change', function () {
     setGuests(roomNumber);
   });
+
+  var uploadHandler = function () {
+    window.pin.mainSection.appendChild(successTemplate);
+    window.map.disablePage();
+    window.pin.setPage();
+    var success = document.querySelector('.success');
+    var onSuccessEscPress = function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        evt.preventDefault();
+        if (success) {
+          success.remove();
+          window.pin.setPage();
+        }
+      }
+      document.removeEventListener('keydown', onSuccessEscPress);
+      document.removeEventListener('click', closeSuccess);
+    };
+    var closeSuccess = function () {
+      success.remove();
+      window.pin.setPage();
+      document.removeEventListener('click', closeSuccess);
+      document.removeEventListener('keydown', onSuccessEscPress);
+    };
+    document.addEventListener('click', closeSuccess);
+    document.addEventListener('keydown', onSuccessEscPress);
+  };
+
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(adForm), uploadHandler, window.pin.errorHandler);
+    evt.preventDefault();
+  });
+  window.form = {
+    adForm: adForm,
+    enableForm: enableForm,
+    disableForm: disableForm
+  };
 })();
