@@ -84,7 +84,7 @@
 
   var uploadHandler = function () {
     window.pin.mainSection.appendChild(successTemplate);
-    window.map.disableMap();
+    window.map.disablePage();
     window.pin.setPage();
     var success = document.querySelector('.success');
     var onSuccessEscPress = function (evt) {

@@ -11,8 +11,6 @@
     mapFilterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
-    mainPinHandler();
-    window.form.disableForm();
   };
   var enableMap = function () {
     map.classList.remove('map--faded');
@@ -20,16 +18,23 @@
     mapFilterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
+  };
+  var enablePage = function () {
+    enableMap();
     window.form.enableForm();
+  };
+  var disablePage = function () {
+    disableMap();
+    mainPinHandler();
+    window.form.disableForm();
   };
   var setAddress = function (x, y) {
     inputAddress.value = (parseFloat(x) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(y) + window.utils.MAIN_PIN_Y);
     return inputAddress.value;
   };
-
   var activatePage = function () {
     setAddress(mainPin.style.left, mainPin.style.top);
-    enableMap();
+    enablePage();
     window.backend.load(window.pin.downloadHandler, window.pin.errorHandler);
     mainPin.removeEventListener('mousedown', activatePage);
     mainPin.removeEventListener('click', activatePage);
@@ -79,11 +84,11 @@
       document.addEventListener('mouseup', onMouseUp);
     });
   };
-  disableMap();
+  disablePage();
   mainPinHandler();
   window.map = {
     map: map,
-    disableMap: disableMap,
+    disablePage: disablePage,
     mainPinHandler: mainPinHandler
   };
 })();
