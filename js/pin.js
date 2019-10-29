@@ -31,7 +31,7 @@
   var setPage = function () {
     var pins = document.querySelectorAll('.map__pin:not(:first-of-type)');
     window.map.disableMap();
-    window.map.adForm.reset();
+    window.form.adForm.reset();
     pins.forEach(function (it) {
       it.remove();
     });

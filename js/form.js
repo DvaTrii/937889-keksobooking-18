@@ -12,6 +12,8 @@
     3: [0, 1, 2],
     100: [3]
   };
+  var adForm = document.querySelector('.ad-form');
+  var formFieldSets = adForm.querySelectorAll('fieldset');
   var adTitle = document.querySelector('#title');
   var adPrice = document.querySelector('#price');
   var adType = document.querySelector('#type');
@@ -30,6 +32,19 @@
       guests[it].removeAttribute('disabled');
     });
   };
+  var enableForm = function () {
+    formFieldSets.forEach(function (it) {
+      it.removeAttribute('disabled');
+    });
+    adForm.classList.remove('ad-form--disabled');
+  };
+  var disableForm = function () {
+    formFieldSets.forEach(function (it) {
+      it.setAttribute('disabled', 'disabled');
+    });
+    adForm.classList.add('ad-form--disabled');
+  };
+
   adTitle.addEventListener('invalid', function () {
     if (adTitle.validity.tooShort) {
       adTitle.setCustomValidity('Минимальная длина заголовка 30 символов');
@@ -93,8 +108,13 @@
     document.addEventListener('keydown', onSuccessEscPress);
   };
 
-  window.map.adForm.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(window.map.adForm), uploadHandler, window.pin.errorHandler);
+  adForm.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(adForm), uploadHandler, window.pin.errorHandler);
     evt.preventDefault();
   });
+  window.form = {
+    adForm: adForm,
+    enableForm: enableForm,
+    disableForm: disableForm
+  };
 })();

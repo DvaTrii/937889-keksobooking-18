@@ -3,32 +3,24 @@
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
   var mapFilterFields = document.querySelectorAll('.map__filter');
-  var adForm = document.querySelector('.ad-form');
-  var formFieldSets = adForm.querySelectorAll('fieldset');
   var mainPin = document.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
   var disableMap = function () {
-    formFieldSets.forEach(function (it) {
-      it.setAttribute('disabled', 'disabled');
-    });
     map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
     mapFilters.classList.add('map__filters--disabled');
     mapFilterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
     mainPinHandler();
+    window.form.disableForm();
   };
   var enableMap = function () {
-    formFieldSets.forEach(function (it) {
-      it.removeAttribute('disabled');
-    });
     map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
     mapFilters.classList.remove('map__filters--disabled');
     mapFilterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
+    window.form.enableForm();
   };
   var setAddress = function (x, y) {
     inputAddress.value = (parseFloat(x) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(y) + window.utils.MAIN_PIN_Y);
@@ -40,8 +32,10 @@
     enableMap();
     window.backend.load(window.pin.downloadHandler, window.pin.errorHandler);
     mainPin.removeEventListener('mousedown', activatePage);
+    mainPin.removeEventListener('click', activatePage);
   };
   var mainPinHandler = function () {
+    mainPin.addEventListener('click', activatePage);
     mainPin.addEventListener('mousedown', activatePage);
     mainPin.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
@@ -90,7 +84,6 @@
   window.map = {
     map: map,
     disableMap: disableMap,
-    mainPinHandler: mainPinHandler,
-    adForm: adForm
+    mainPinHandler: mainPinHandler
   };
 })();
