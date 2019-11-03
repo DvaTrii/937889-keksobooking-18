@@ -31,6 +31,8 @@
     GuestsValues[roomsAmount.value].forEach(function (it) {
       guests[it].removeAttribute('disabled');
     });
+    var i = GuestsValues[roomsAmount.value][window.utils.getRandomNumber(GuestsValues[roomsAmount.value])];
+    guests[i].setAttribute('selected', 'selected');
   };
   var enableForm = function () {
     formFieldSets.forEach(function (it) {

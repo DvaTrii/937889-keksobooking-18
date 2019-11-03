@@ -1,21 +1,21 @@
 'use strict';
 (function () {
   var map = document.querySelector('.map');
-  var mapFilters = document.querySelector('.map__filters');
-  var mapFilterFields = document.querySelectorAll('.map__filter');
   var mainPin = document.querySelector('.map__pin--main');
   var inputAddress = document.querySelector('#address');
   var disableMap = function () {
     map.classList.add('map--faded');
-    mapFilters.classList.add('map__filters--disabled');
-    mapFilterFields.forEach(function (it) {
+    window.filter.filters.classList.add('map__filters--disabled');
+    window.filter.filterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
+    mainPin.style.left = window.utils.MAIN_PIN_CENTER_X + 'px';
+    mainPin.style.top = window.utils.MAIN_PIN_CENTER_Y + 'px';
   };
   var enableMap = function () {
     map.classList.remove('map--faded');
-    mapFilters.classList.remove('map__filters--disabled');
-    mapFilterFields.forEach(function (it) {
+    window.filter.filters.classList.remove('map__filters--disabled');
+    window.filter.filterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
   };

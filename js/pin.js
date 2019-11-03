@@ -24,6 +24,9 @@
     return pinElement;
   };
   var downloadHandler = function (pins) {
+    // for (var i = 0; i < 5; i++) {
+    //   pinSection.appendChild(createPin(pins[i]));
+    // }
     pins.forEach(function (it) {
       pinSection.appendChild(createPin(it));
     });
@@ -67,6 +70,7 @@
     errorHandler: errorHandler,
     errorTemplate: errorTemplate,
     mainSection: mainSection,
-    setPage: setPage
+    setPage: setPage,
+    createPin: createPin
   };
 })();
