@@ -10,10 +10,10 @@
     });
   };
 
-  var onHouseTypeChange = function (pins) {
+  var onHouseTypeChange = function () {
     removePins();
     // var pins = advertisement.slice; // копирую массив с данными чтоб потом с ним работать
-    var pinsFiltered = pins.filter(function (it) {
+    var pinsFiltered = window.data.filter(function (it) {
       return it.offer.type === houseType.value;
     });
     pinsFiltered.forEach(function (pin) {
