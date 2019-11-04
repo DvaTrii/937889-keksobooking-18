@@ -8,14 +8,16 @@
   };
   var cardTemplate = document.querySelector('#card')
     .content.querySelector('.popup');
-
-  var onCardEscPress = function (evt) {
+  var removeCard = function () {
     var card = document.querySelector('.popup');
+    if (card) {
+      card.remove();
+    }
+  };
+  var onCardEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
       evt.preventDefault();
-      if (document.querySelector('.popup')) {
-        card.remove();
-      }
+      removeCard();
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -54,7 +56,8 @@
   };
 
   window.card = {
-    createCard: createCard
+    createCard: createCard,
+    removeCard: removeCard
   };
 
 })();

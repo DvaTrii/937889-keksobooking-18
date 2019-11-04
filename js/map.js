@@ -5,8 +5,8 @@
   var inputAddress = document.querySelector('#address');
   var disableMap = function () {
     map.classList.add('map--faded');
-    window.filter.filters.classList.add('map__filters--disabled');
-    window.filter.filterFields.forEach(function (it) {
+    window.filters.filters.classList.add('map__filters--disabled');
+    window.filters.filterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
     mainPin.style.left = window.utils.MAIN_PIN_CENTER_X + 'px';
@@ -14,8 +14,8 @@
   };
   var enableMap = function () {
     map.classList.remove('map--faded');
-    window.filter.filters.classList.remove('map__filters--disabled');
-    window.filter.filterFields.forEach(function (it) {
+    window.filters.filters.classList.remove('map__filters--disabled');
+    window.filters.filterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
   };

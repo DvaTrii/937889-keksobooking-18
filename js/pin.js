@@ -6,10 +6,7 @@
   var filtersSection = document.querySelector('.map__filters-container');
   var mainSection = document.querySelector('main');
   var onClickPin = function (advertisement) {
-    var pinCard = document.querySelector('.map__card');
-    if (document.querySelector('.map__card')) {
-      pinCard.remove();
-    }
+    window.card.removeCard();
     window.map.map.insertBefore(window.card.createCard(advertisement), filtersSection);
   };
   var createPin = function (advertisement) {
@@ -24,20 +21,23 @@
     return pinElement;
   };
   var downloadHandler = function (pins) {
-    for (var i = 0; i < 5; i++) {
-      pinSection.appendChild(createPin(pins[i]));
-    }
-    // pins.forEach(function (it) {
-    //   pinSection.appendChild(createPin(it));
-    // });
+    window.card.removeCard();
+    removePins();
+    window.filters.allFilter(pins).forEach(function (it) {
+      pinSection.appendChild(createPin(it));
+    });
   };
-  var setPage = function () {
-    var pins = document.querySelectorAll('.map__pin:not(:first-of-type)');
-    window.map.disablePage();
-    window.form.adForm.reset();
-    pins.forEach(function (it) {
+
+  var removePins = function () {
+    var activePins = document.querySelectorAll('.map__pin:not(:first-of-type)');
+    activePins.forEach(function (it) {
       it.remove();
     });
+  };
+  var setPage = function () {
+    window.map.disablePage();
+    window.form.adForm.reset();
+    removePins();
   };
   var errorHandler = function () {
     mainSection.appendChild(errorTemplate);
@@ -71,6 +71,7 @@
     errorTemplate: errorTemplate,
     mainSection: mainSection,
     setPage: setPage,
-    createPin: createPin
+    createPin: createPin,
+    removePins: removePins
   };
 })();
