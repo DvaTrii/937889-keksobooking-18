@@ -6,12 +6,15 @@
     house: 5000,
     palace: 10000
   };
+
   var GuestsValues = {
     1: [2],
     2: [1, 2],
     3: [0, 1, 2],
     100: [3]
   };
+
+  var inputAddress = document.querySelector('#address');
   var adForm = document.querySelector('.ad-form');
   var formFieldSets = adForm.querySelectorAll('fieldset');
   var adTitle = document.querySelector('#title');
@@ -22,24 +25,36 @@
   var roomNumber = document.querySelector('#room_number');
   var guestNumber = document.querySelector('#capacity');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
+  var setAddress = function (x, y) {
+    inputAddress.value = (parseFloat(x) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(y) + window.utils.MAIN_PIN_Y);
+    return inputAddress.value;
+  };
+
   var setGuests = function (roomsAmount) {
     var guests = guestNumber.options;
+
     for (var j = 0; j < guests.length; j++) {
       guests[j].setAttribute('disabled', 'disabled');
       guests[j].removeAttribute('selected');
     }
+
     GuestsValues[roomsAmount.value].forEach(function (it) {
       guests[it].removeAttribute('disabled');
     });
+
     var i = GuestsValues[roomsAmount.value][window.utils.getRandomNumber(GuestsValues[roomsAmount.value])];
+
     guests[i].setAttribute('selected', 'selected');
   };
+
   var enableForm = function () {
     formFieldSets.forEach(function (it) {
       it.removeAttribute('disabled');
     });
     adForm.classList.remove('ad-form--disabled');
   };
+
   var disableForm = function () {
     formFieldSets.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
@@ -73,9 +88,11 @@
       adPrice.setCustomValidity('');
     }
   });
+
   timeIn.addEventListener('change', function () {
     timeOut.value = timeIn.value;
   });
+
   timeOut.addEventListener('change', function () {
     timeIn.value = timeOut.value;
   });
@@ -84,39 +101,47 @@
     setGuests(roomNumber);
   });
 
-  var uploadHandler = function () {
-    window.pin.mainSection.appendChild(successTemplate);
-    window.map.disablePage();
-    window.pin.setPage();
-    var success = document.querySelector('.success');
+  var onUpload = function () {
+
+    // var success = document.querySelector('.success');
+
     var onSuccessEscPress = function (evt) {
+
       if (evt.keyCode === window.utils.ESC_KEYCODE) {
         evt.preventDefault();
-        if (success) {
-          success.remove();
+        if (document.querySelector('.success')) {
+          document.querySelector('.success').remove();
           window.pin.setPage();
         }
       }
       document.removeEventListener('keydown', onSuccessEscPress);
       document.removeEventListener('click', closeSuccess);
     };
+
     var closeSuccess = function () {
-      success.remove();
+      document.querySelector('.success').remove();
       window.pin.setPage();
       document.removeEventListener('click', closeSuccess);
       document.removeEventListener('keydown', onSuccessEscPress);
     };
+
+    window.map.mainSection.appendChild(successTemplate);
+    window.map.disablePage();
+    window.pin.setPage();
+
     document.addEventListener('click', closeSuccess);
     document.addEventListener('keydown', onSuccessEscPress);
   };
 
   adForm.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(adForm), uploadHandler, window.pin.errorHandler);
+    window.backend.save(new FormData(adForm), onUpload, window.map.onError);
     evt.preventDefault();
   });
+
   window.form = {
     adForm: adForm,
     enableForm: enableForm,
-    disableForm: disableForm
+    disableForm: disableForm,
+    setAddress: setAddress
   };
 })();

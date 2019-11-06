@@ -51,8 +51,11 @@
   };
 
   filters.addEventListener('change', function () {
-    window.pin.downloadHandler(window.allData);
+    window.card.removeCard();
+    window.pin.removePins();
+    window.pin.renderPins(allFilter(window.allData));
   });
+
   window.filters = {
     filters: filters,
     filterFields: filterFields,
