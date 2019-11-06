@@ -59,8 +59,10 @@
       }
     }
   };
+
   var getAdvertisements = function (amount) {
     var advertisements = [];
+
     for (var j = 0; j < amount; j++) {
       advertisements.push({
         author: {
@@ -85,8 +87,10 @@
         }
       });
     }
+
     return advertisements;
   };
+
   window.data = {
     getAdvertisements: getAdvertisements
   };

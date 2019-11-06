@@ -6,16 +6,21 @@
     house: 'дом',
     bungalo: 'бунгало'
   };
+
   var cardTemplate = document.querySelector('#card')
     .content.querySelector('.popup');
 
-  var onCardEscPress = function (evt) {
+  var removeCard = function () {
     var card = document.querySelector('.popup');
+    if (card) {
+      card.remove();
+    }
+  };
+
+  var onCardEscPress = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
       evt.preventDefault();
-      if (document.querySelector('.popup')) {
-        card.remove();
-      }
+      removeCard();
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -29,13 +34,16 @@
     cardElement.querySelector('.popup__text--capacity').textContent = advertisement.offer.rooms + ' комнаты для ' + advertisement.offer.guests + ' гостей.';
     cardElement.querySelector('.popup__text--time').textContent = 'заезд после ' + advertisement.offer.checkin + ' выезд после ' + advertisement.offer.checkout;
     cardElement.querySelector('.popup__features').innerHTML = '';
+
     advertisement.offer.features.forEach(function (it) {
       var featuresElement = document.createElement('li');
       featuresElement.className = 'popup__feature popup__feature--' + it;
       cardElement.querySelector('.popup__features').appendChild(featuresElement);
     });
+
     cardElement.querySelector('.popup__description').textContent = advertisement.offer.description;
     cardElement.querySelector('.popup__photos').innerHTML = '';
+
     advertisement.offer.photos.forEach(function (it) {
       var photosElement = document.createElement('img');
       photosElement.className = 'popup__photo';
@@ -45,16 +53,19 @@
       photosElement.src = it;
       cardElement.querySelector('.popup__photos').appendChild(photosElement);
     });
+
     cardElement.querySelector('.popup__avatar').src = advertisement.author.avatar;
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
       cardElement.remove();
     });
+
     document.addEventListener('keydown', onCardEscPress);
     return cardElement;
   };
 
   window.card = {
-    createCard: createCard
+    createCard: createCard,
+    removeCard: removeCard
   };
 
 })();
