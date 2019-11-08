@@ -3,6 +3,8 @@
   var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
   var mainSection = document.querySelector('main');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+
 
   var disableMap = function () {
     map.classList.add('map--faded');
@@ -20,6 +22,12 @@
     window.filters.filterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
+  };
+
+  var setPage = function () {
+    disablePage();
+    window.form.adForm.reset();
+    window.pin.removePins();
   };
 
   var enablePage = function () {
@@ -115,6 +123,7 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
   disablePage();
   mainPin.addEventListener('click', activatePage);
   mainPin.addEventListener('mousedown', activatePage);
