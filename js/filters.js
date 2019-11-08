@@ -6,6 +6,7 @@
   var housingPrice = filters.querySelector('#housing-price');
   var housingRooms = filters.querySelector('#housing-rooms');
   var housingGuests = filters.querySelector('#housing-guests');
+  var filterOfFeatures = filters.querySelectorAll('.map__checkbox');
 
   var PriceType = {
     LOW: 'low',
@@ -37,9 +38,7 @@
   };
 
   var getFeatures = function (obj) {
-    var filterOfFeatures = filters.querySelectorAll('.map__checkbox');
-    var arrFeatures = Array.from(filterOfFeatures);
-    return arrFeatures.filter(function (el) {
+    return Array.from(filterOfFeatures).filter(function (el) {
       return el.checked;
     }).map(function (el) {
       return el.value;
