@@ -58,7 +58,7 @@
     }).slice(0, 5);
   };
 
-  filters.addEventListener('change', window.ddebounce(function () {
+  filters.addEventListener('change', window.debounce(function () {
     window.card.removeCard();
     window.pin.removePins();
     window.pin.renderPins(allFilter(window.allData));

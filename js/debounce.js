@@ -2,7 +2,7 @@
 (function () {
   var DEBOUNCE_INTERVAL = 1000; // ms
 
-  window.ddebounce = function (cb) {
+  var debounce = function (cb) {
     var lastTimeout = null;
 
     return function () {
@@ -16,7 +16,5 @@
     };
   };
 
-  // window.debounce = {
-  //   debounce: debounce
-  // };
+  window.debounce = debounce;
 })();
