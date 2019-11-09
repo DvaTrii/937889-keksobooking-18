@@ -2,7 +2,6 @@
 (function () {
   var pinSection = document.querySelector('.map__pins');
   var pinButtonTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filtersSection = document.querySelector('.map__filters-container');
 
   var onClickPin = function (advertisement) {
@@ -37,16 +36,8 @@
     });
   };
 
-  var setPage = function () {
-    window.map.disablePage();
-    window.form.adForm.reset();
-    removePins();
-  };
-
   window.pin = {
     pinSection: pinSection,
-    errorTemplate: errorTemplate,
-    setPage: setPage,
     createPin: createPin,
     removePins: removePins,
     renderPins: renderPins
