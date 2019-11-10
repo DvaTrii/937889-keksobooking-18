@@ -12,6 +12,9 @@
     window.filters.filterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
+    window.filters.filterOfFeatures.forEach(function (it) {
+      it.setAttribute('disabled', 'disabled');
+    });
     mainPin.style.left = window.utils.MAIN_PIN_CENTER_X + 'px';
     mainPin.style.top = window.utils.MAIN_PIN_CENTER_Y + 'px';
   };
@@ -20,6 +23,9 @@
     map.classList.remove('map--faded');
     window.filters.filters.classList.remove('map__filters--disabled');
     window.filters.filterFields.forEach(function (it) {
+      it.removeAttribute('disabled');
+    });
+    window.filters.filterOfFeatures.forEach(function (it) {
       it.removeAttribute('disabled');
     });
   };

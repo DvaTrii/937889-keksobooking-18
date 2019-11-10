@@ -66,6 +66,7 @@
   window.filters = {
     filters: filters,
     filterFields: filterFields,
+    filterOfFeatures: filterOfFeatures,
     allFilter: allFilter
   };
 })();

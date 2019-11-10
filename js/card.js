@@ -14,6 +14,7 @@
     var card = document.querySelector('.popup');
     if (card) {
       card.remove();
+      window.pin.deactivatePin();
     }
   };
 
@@ -57,6 +58,7 @@
     cardElement.querySelector('.popup__avatar').src = advertisement.author.avatar;
     cardElement.querySelector('.popup__close').addEventListener('click', function () {
       cardElement.remove();
+      window.pin.deactivatePin();
     });
 
     document.addEventListener('keydown', onCardEscPress);
