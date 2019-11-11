@@ -34,6 +34,8 @@
     disablePage();
     window.form.adForm.reset();
     window.pin.removePins();
+    window.pictures.removeAvatar();
+    window.pictures.removePhotos();
   };
 
   var enablePage = function () {
@@ -137,6 +139,7 @@
   window.map = {
     map: map,
     mainSection: mainSection,
+    setPage: setPage,
     disablePage: disablePage,
     onDownload: onDownload,
     onError: onError
