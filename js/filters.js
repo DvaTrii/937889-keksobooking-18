@@ -61,7 +61,11 @@
     filterFields.forEach(function (it) {
       it.value = 'any';
     });
+    filterOfFeatures.forEach(function (it) {
+      it.checked = false;
+    });
   };
+
   filters.addEventListener('change', window.debounce(function () {
     window.card.removeCard();
     window.pin.removePins();
