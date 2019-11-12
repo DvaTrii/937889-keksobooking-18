@@ -12,6 +12,9 @@
     window.filters.filterFields.forEach(function (it) {
       it.setAttribute('disabled', 'disabled');
     });
+    window.filters.filterOfFeatures.forEach(function (it) {
+      it.setAttribute('disabled', 'disabled');
+    });
     mainPin.style.left = window.utils.MAIN_PIN_CENTER_X + 'px';
     mainPin.style.top = window.utils.MAIN_PIN_CENTER_Y + 'px';
   };
@@ -22,12 +25,18 @@
     window.filters.filterFields.forEach(function (it) {
       it.removeAttribute('disabled');
     });
+    window.filters.filterOfFeatures.forEach(function (it) {
+      it.removeAttribute('disabled');
+    });
   };
 
   var setPage = function () {
     disablePage();
     window.form.adForm.reset();
+    window.filters.resetFilters();
     window.pin.removePins();
+    window.pictures.removeAvatar();
+    window.pictures.removePhotos();
   };
 
   var enablePage = function () {
@@ -131,6 +140,7 @@
   window.map = {
     map: map,
     mainSection: mainSection,
+    setPage: setPage,
     disablePage: disablePage,
     onDownload: onDownload,
     onError: onError

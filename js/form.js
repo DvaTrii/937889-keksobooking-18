@@ -25,6 +25,7 @@
   var roomNumber = document.querySelector('#room_number');
   var guestNumber = document.querySelector('#capacity');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var resetButton = document.querySelector('.ad-form__reset');
 
   var setAddress = function (x, y) {
     inputAddress.value = (parseFloat(x) + window.utils.MAIN_PIN_X) + ',' + (parseFloat(y) + window.utils.MAIN_PIN_Y);
@@ -102,16 +103,13 @@
   });
 
   var onUpload = function () {
-
-    // var success = document.querySelector('.success');
-
     var onSuccessEscPress = function (evt) {
 
       if (evt.keyCode === window.utils.ESC_KEYCODE) {
         evt.preventDefault();
         if (document.querySelector('.success')) {
           document.querySelector('.success').remove();
-          window.pin.setPage();
+          window.map.setPage();
         }
       }
       document.removeEventListener('keydown', onSuccessEscPress);
@@ -120,14 +118,14 @@
 
     var closeSuccess = function () {
       document.querySelector('.success').remove();
-      window.pin.setPage();
+      window.map.setPage();
       document.removeEventListener('click', closeSuccess);
       document.removeEventListener('keydown', onSuccessEscPress);
     };
 
     window.map.mainSection.appendChild(successTemplate);
     window.map.disablePage();
-    window.pin.setPage();
+    window.map.setPage();
 
     document.addEventListener('click', closeSuccess);
     document.addEventListener('keydown', onSuccessEscPress);
@@ -136,6 +134,10 @@
   adForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(adForm), onUpload, window.map.onError);
     evt.preventDefault();
+  });
+
+  resetButton.addEventListener('click', function () {
+    window.map.setPage();
   });
 
   window.form = {
