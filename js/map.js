@@ -33,6 +33,7 @@
   var setPage = function () {
     disablePage();
     window.form.adForm.reset();
+    window.filters.resetFilters();
     window.pin.removePins();
     window.pictures.removeAvatar();
     window.pictures.removePhotos();

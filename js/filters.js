@@ -57,6 +57,11 @@
     }).slice(0, 5);
   };
 
+  var resetFilters = function () {
+    filterFields.forEach(function (it) {
+      it.value = 'any';
+    });
+  };
   filters.addEventListener('change', window.debounce(function () {
     window.card.removeCard();
     window.pin.removePins();
@@ -67,6 +72,7 @@
     filters: filters,
     filterFields: filterFields,
     filterOfFeatures: filterOfFeatures,
+    resetFilters: resetFilters,
     allFilter: allFilter
   };
 })();
