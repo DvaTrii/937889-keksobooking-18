@@ -1,13 +1,5 @@
 'use strict';
 (function () {
-  var filters = document.querySelector('.map__filters');
-  var filterFields = document.querySelectorAll('.map__filter');
-  var housingType = filters.querySelector('#housing-type');
-  var housingPrice = filters.querySelector('#housing-price');
-  var housingRooms = filters.querySelector('#housing-rooms');
-  var housingGuests = filters.querySelector('#housing-guests');
-  var filterOfFeatures = filters.querySelectorAll('.map__checkbox');
-
   var PriceType = {
     LOW: 'low',
     MIDDLE: 'middle',
@@ -15,6 +7,14 @@
     MIN: 10000,
     MAX: 50000
   };
+
+  var filters = document.querySelector('.map__filters');
+  var filterFields = document.querySelectorAll('.map__filter');
+  var housingType = filters.querySelector('#housing-type');
+  var housingPrice = filters.querySelector('#housing-price');
+  var housingRooms = filters.querySelector('#housing-rooms');
+  var housingGuests = filters.querySelector('#housing-guests');
+  var filterOfFeatures = filters.querySelectorAll('.map__checkbox');
 
   var getHousingType = function (el) {
     return housingType.value === 'any' ? true : el.offer.type === housingType.value;
