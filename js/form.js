@@ -131,6 +131,16 @@
     document.addEventListener('keydown', onSuccessEscPress);
   };
 
+  var resetForm = function () {
+    var guests = guestNumber.options;
+    Array.from(guests).forEach(function (it) {
+      it.removeAttribute('selected');
+    });
+    guests[GuestsValues[1]].setAttribute('selected', 'selected');
+    adPrice.placeholder = '1000';
+    adForm.reset();
+  };
+
   adForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(adForm), onUpload, window.map.onError);
     evt.preventDefault();
@@ -141,7 +151,7 @@
   });
 
   window.form = {
-    adForm: adForm,
+    resetForm: resetForm,
     enableForm: enableForm,
     disableForm: disableForm,
     setAddress: setAddress
