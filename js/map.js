@@ -47,8 +47,8 @@
   var disablePage = function () {
     disableMap();
     window.form.disableForm();
-    mainPin.addEventListener('click', activatePage);
-    mainPin.addEventListener('mousedown', activatePage);
+    mainPin.addEventListener('click', onPageActivate);
+    mainPin.addEventListener('mousedown', onPageActivate);
   };
 
   var onDownload = function (data) {
@@ -60,11 +60,11 @@
     mainSection.appendChild(errorTemplate);
     var errorButton = document.querySelector('.error__button');
     var error = document.querySelector('.error');
-    var closeError = function () {
+    var onErrorClose = function () {
       error.remove();
       setPage();
-      errorButton.removeEventListener('click', closeError);
-      document.removeEventListener('click', closeError);
+      errorButton.removeEventListener('click', onErrorClose);
+      document.removeEventListener('click', onErrorClose);
     };
     var onErrorEscPress = function (evt) {
       if (evt.keyCode === window.utils.ESC_KEYCODE) {
@@ -76,17 +76,17 @@
       }
       document.removeEventListener('keydown', onErrorEscPress);
     };
-    errorButton.addEventListener('click', closeError);
-    document.addEventListener('click', closeError);
+    errorButton.addEventListener('click', onErrorClose);
+    document.addEventListener('click', onErrorClose);
     document.addEventListener('keydown', onErrorEscPress);
   };
 
-  var activatePage = function () {
+  var onPageActivate = function () {
     window.form.setAddress(mainPin.style.left, mainPin.style.top);
     enablePage();
     window.backend.load(onDownload, onError);
-    mainPin.removeEventListener('mousedown', activatePage);
-    mainPin.removeEventListener('click', activatePage);
+    mainPin.removeEventListener('mousedown', onPageActivate);
+    mainPin.removeEventListener('click', onPageActivate);
   };
 
   mainPin.addEventListener('mousedown', function (evt) {
@@ -134,8 +134,8 @@
   });
 
   disablePage();
-  mainPin.addEventListener('click', activatePage);
-  mainPin.addEventListener('mousedown', activatePage);
+  mainPin.addEventListener('click', onPageActivate);
+  mainPin.addEventListener('mousedown', onPageActivate);
 
   window.map = {
     map: map,

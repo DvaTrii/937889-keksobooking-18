@@ -113,13 +113,13 @@
         }
       }
       document.removeEventListener('keydown', onSuccessEscPress);
-      document.removeEventListener('click', closeSuccess);
+      document.removeEventListener('click', onSuccessClose);
     };
 
-    var closeSuccess = function () {
+    var onSuccessClose = function () {
       document.querySelector('.success').remove();
       window.map.setPage();
-      document.removeEventListener('click', closeSuccess);
+      document.removeEventListener('click', onSuccessClose);
       document.removeEventListener('keydown', onSuccessEscPress);
     };
 
@@ -127,7 +127,7 @@
     window.map.disablePage();
     window.map.setPage();
 
-    document.addEventListener('click', closeSuccess);
+    document.addEventListener('click', onSuccessClose);
     document.addEventListener('keydown', onSuccessEscPress);
   };
 
