@@ -54,6 +54,7 @@
       it.removeAttribute('disabled');
     });
     adForm.classList.remove('ad-form--disabled');
+
   };
 
   var disableForm = function () {
@@ -134,9 +135,11 @@
   var resetForm = function () {
     var guests = guestNumber.options;
     Array.from(guests).forEach(function (it) {
+      it.setAttribute('disabled', 'disabled');
       it.removeAttribute('selected');
     });
     guests[GuestsValues[1]].setAttribute('selected', 'selected');
+    guests[GuestsValues[1]].removeAttribute('disabled');
     adPrice.placeholder = '1000';
     adForm.reset();
   };

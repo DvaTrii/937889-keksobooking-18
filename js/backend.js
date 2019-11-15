@@ -1,7 +1,6 @@
 'use strict';
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
-  var isTimeout;
 
   var createXHR = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -18,17 +17,15 @@
       onError('Произошла ошибка соединения');
     });
 
-    if (isTimeout) {
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-      xhr.timeout = 5000;
-    }
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+    xhr.timeout = 5000;
+
     return xhr;
   };
 
   var load = function (onLoad, onError) {
-    isTimeout = true;
     var xhr = createXHR(onLoad, onError);
 
     xhr.open('GET', URL + '/data');
@@ -36,7 +33,6 @@
   };
 
   var save = function (data, onLoad, onError) {
-    isTimeout = false;
     var xhr = createXHR(onLoad, onError);
 
     xhr.open('POST', URL);
