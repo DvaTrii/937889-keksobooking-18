@@ -64,7 +64,7 @@
     adForm.classList.add('ad-form--disabled');
   };
 
-  adTitle.addEventListener('invalid', function () {
+  adTitle.addEventListener('input', function () {
     if (adTitle.validity.tooShort) {
       adTitle.setCustomValidity('Минимальная длина заголовка 30 символов');
     } else if (adTitle.validity.tooLong) {
@@ -81,7 +81,7 @@
     adPrice.placeholder = TypeMinPrice[adType.value];
   });
 
-  adPrice.addEventListener('invalid', function () {
+  adPrice.addEventListener('input', function () {
     if (adPrice.validity.rangeOverflow) {
       adPrice.setCustomValidity('Стоимость не может быть выше 1000000');
     } else if (adPrice.validity.rangeUnderflow) {
@@ -152,6 +152,8 @@
   resetButton.addEventListener('click', function () {
     window.map.setPage();
   });
+
+  setGuests(roomNumber);
 
   window.form = {
     resetForm: resetForm,
